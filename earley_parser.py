@@ -14,10 +14,12 @@ class Parser:
     def parse(self, file):
         lex_list = self.__lex.lex_analysis(file)
         state_list = self.__earley.start(self.__grammar, lex_list)
-        print(state_list)
-        for st in state_list:
-            if not st.afterDot:
-                return self.R(state_list, st, len(state_list)-1, [])
+        if type(state_list) is str:
+            print (state_list)
+            return "Stop parsing"
+        for sit in state_list[-1]:
+            if not sit.afterDot:
+                return self.R(state_list, sit, len(state_list)-1, [])
 
     def R(self, states, s: earley.Situation, j: int, pi: []):
 

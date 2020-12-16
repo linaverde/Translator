@@ -35,7 +35,6 @@ class Earley:
         self.__grammar = grammar
         self.__string = string
         self.__set_start_state()
-        print(self.__states[0])
         if not self.__states[0]:
             return "ERROR CREATING EARLEY START STATE"
         for j in range(1, len(string) + 1):

@@ -24,7 +24,6 @@ def set_term():
     terms = []
     for symbol in terms_str:
         terms.append(gr.Term(symbol))
-    print(terms_str)
     return terms
 
 
