@@ -5,6 +5,7 @@ import re
 
 class LexAnalyzer:
 
+
     def lex_analysis(self, source):
 
         DATATYPES = {'bool': 'R1', 'char': 'R2', 'int': 'R30', 'float': 'R4', 'double': 'R5',
