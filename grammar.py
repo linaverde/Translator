@@ -5,7 +5,7 @@ class Term:
     def __init__(self, value: str):
         self.value = value
 
-    def get_value(self):
+    def value(self):
         return self.value
 
 
@@ -31,7 +31,7 @@ class Grammar:
         self.s = s
         check = True
         for r in rules:
-            if r.left in terminal:
+            if self.is_terminal(r.left) :
                 print('Rule '+str(rules.left.value)+'->'+str(rules.right)+' have mistake: left part is terminal')
                 check = False
         if not check:
@@ -53,9 +53,15 @@ class Grammar:
         return self.nonterminal
 
     def is_terminal(self, t: Term):
-        return t in self.terminal
+        for term in self.terminal:
+            if t.value == term.value:
+                return True
+        return False
 
     def is_nonterminal(self, t: Term):
-        return t in self.nonterminal
+        for term in self.nonterminal:
+            if t.value == term.value:
+                return True
+        return False
 
 
