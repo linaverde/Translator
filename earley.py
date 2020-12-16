@@ -1,3 +1,5 @@
+from inspect import stack
+
 import grammar as gr
 
 
@@ -16,23 +18,28 @@ class Situation:
     def set_k(self, k: int):
         self.k = k
 
+    def get_k(self):
+        return self.k
+
 
 class Earley:
     __states = []
     __grammar = None
     __string = None
+    __pi = []
 
     def start(self, grammar: gr.Grammar, string: []):
         self.__grammar = grammar
         self.__string = string
         self.__set_start_state()
+        self.__pi = []
         if self.__states[0] is None:
             return "ERROR CREATING EARLEY START STATE"
         for j in range(1, len(string) + 1):
-            j_state = self.__create_j_state(j, string[j-1][1])
+            j_state = self.__create_j_state(j, string[j - 1][1])
             if j_state is None:
-                pos = self.get_pos_in_string(string, string[j-1], j-1)
-                return "ERROR IN LINE " + str(string[j-1][2]) + " IN POSITION " + str(pos)
+                pos = self.get_pos_in_string(string, string[j - 1], j - 1)
+                return "ERROR IN LINE " + str(string[j - 1][2]) + " IN POSITION " + str(pos)
             new_state_1 = [0]
             new_state_2 = [0]
             while new_state_1 is not None or new_state_2 is not None:
@@ -43,8 +50,7 @@ class Earley:
                 if new_state_2 is not None:
                     j_state = list(set(new_state_2 + j_state))
             self.__states.append(j_state)
-        return  self.__states
-
+        return self.__states
 
     def __set_start_state(self):
         s = self.__grammar.s
@@ -65,7 +71,6 @@ class Earley:
             self.__states.append(state0)
         else:
             self.__states.append(None)
-
 
     def __grow_tree(self, j: int):
         last_state = self.__states[j]
@@ -107,12 +112,10 @@ class Earley:
             return new_state
         return None
 
-
     def __is_dot_last(self, sit: Situation):
         if not sit.afterDot:
             return True
         return False
-
 
     def __is_dot_before_nt(self, sit: Situation):
         if self.__grammar.is_nonterminal(sit.afterDot[0]):
@@ -128,3 +131,27 @@ class Earley:
             i -= 1
         return count
 
+    def R(self, s: Situation, j: int):
+
+        self.__pi.append(self.__grammar.get_rules().index(s))
+        k = len(s.beforeDot)
+        c = j
+        if k == 0:
+            return self.__pi
+        while (k != 0):
+            if self.__grammar.is_terminal(s.beforeDot[k]):
+                k = k - 1
+                c = c - 1
+            elif self.__grammar.is_nonterminal(s.beforeDot[k]):
+                # находим ситуацию в I[c]
+                for st in self.__states[c]:
+                    if self.__is_dot_last(st) and st.left == s.beforeDot[k]:
+                        r = st.get_k
+                        Xk = st.left
+                        # находим ситуацию в I[r]
+                        for nst in self.__states[r]:
+                            if nst.left == s.left and nst.beforeDot[-1] == Xk:
+                                self.R(st, c)
+                                k = k - 1
+                                c = r
+        return self.__pi
