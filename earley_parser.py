@@ -4,7 +4,6 @@ import earley
 
 
 class Parser:
-
     __earley = earley.Earley()
 
     def __init__(self, lex: lex.LexAnalyzer, g: gr.Grammar):
@@ -13,13 +12,14 @@ class Parser:
 
     def parse(self, file):
         lex_list = self.__lex.lex_analysis(file)
+        print(lex_list)
         state_list = self.__earley.start(self.__grammar, lex_list)
         if type(state_list) is str:
-            print (state_list)
+            print(state_list)
             return "Stop parsing"
-        for sit in state_list[-1]:
-            if not sit.afterDot:
-                return self.R(state_list, sit, len(state_list)-1, [])
+        # for sit in state_list[-1]:
+        #     if not sit.afterDot:
+        #         return self.R(state_list, sit, len(state_list) - 1, [])
 
     def R(self, states, s: earley.Situation, j: int, pi: []):
 
@@ -41,7 +41,7 @@ class Parser:
                         # находим ситуацию в I[r]
                         for nst in states[r]:
                             if nst.left == s.left and nst.beforeDot[-1] == Xk:
-                                self.R(states,st, c, pi)
+                                self.R(states, st, c, pi)
                                 k = k - 1
                                 c = r
         return pi
