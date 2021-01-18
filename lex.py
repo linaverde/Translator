@@ -3,17 +3,16 @@ import re
 
 # _|\w≈[a-zA-Z]\w+ - регулярка для идентификатора
 
-class LexAnalyzer:
+class CppLexAnalyzer:
 
 
     def lex_analysis(self, source):
 
         DATATYPES = {'bool': 'R1', 'char': 'R2', 'int': 'R3', 'float': 'R4', 'double': 'R5',
-                     'void': 'R6', 'abs': 'R7', 'log': 'R8', 'exp': 'R9',
-                     'true': 'R10', 'false': 'R11', }
+                     'void': 'R6', 'true': 'R7', 'false': 'R8', }
 
         KEYWORD = {'do': 'K1', 'else': 'K2', 'for': 'K3', 'if': 'K4', 'long': 'K5', 'short': 'K6',
-                   'signed': 'K7', 'unsigned': 'K8', 'while': 'K9', 'return': 'K10', "const": "K11"}
+                   'signed': 'K7', 'unsigned': 'K8', 'while': 'K9', 'return': 'K10'}  # "const": "K11"}
 
         DIVIDER = {'.': 'D1', ',': 'D2', ';': 'D3', '{': 'D4', '}': 'D5', '(': 'D6', ')': 'D7'}
 

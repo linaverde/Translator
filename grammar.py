@@ -1,5 +1,6 @@
 import sys
 
+
 class Term:
 
     def __init__(self, value: str):
@@ -31,11 +32,29 @@ class Grammar:
         self.s = s
         check = True
         for r in rules:
-            if self.is_terminal(r.left) :
-                print('Rule '+str(rules.left.value)+'->'+str(rules.right)+' have mistake: left part is terminal')
+            if self.is_terminal(r.left):
+                print(
+                    'Rule ' + str(rules.left.value) + '->' + str(rules.right) + ' have mistake: left part is terminal')
                 check = False
         if not check:
             sys.exit(2)
+
+    def rules_count(self):
+        return len(self.rules)
+
+    def rule_equals(self, r1: Rule, r2: Rule):
+        if r1.left.value != r2.left.value or len(r1.right) != len(r2.right):
+            return False
+        for i, t in enumerate(r1.right):
+            if t.value != r2.right[i].value:
+                return False
+        return True
+
+    def find_rule_number(self, r: Rule):
+        for i, rule in enumerate(self.rules):
+            if self.rule_equals(r, rule):
+                return i
+        return -1
 
     def get_rules(self):
         return self.rules
@@ -63,5 +82,3 @@ class Grammar:
             if t.value == term.value:
                 return True
         return False
-
-
