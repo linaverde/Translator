@@ -7,4 +7,5 @@ a = 5;
 b = 4;
 int c = a + b;
 
+return 0;
 }

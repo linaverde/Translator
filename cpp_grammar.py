@@ -25,13 +25,13 @@ def set_term():
     terms_str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789(){}[]+-*/%><=!&|;“‘,_#@$^~№:?"
     terms = []
     terms_array = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8",
-                   "K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "k9", "K10"
+                   "K1", "K2", "K3", "K4", "K5", "K6", "K7", "K8", "K9", "K10",
                    "D1", "D2", "D3", "D4", "D5", "D6", "D7",
                    "O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10",
                    "O11", "O12", "O13", "O14", "O15",
                    "N", "C", "ID"]
-    for symbol in terms_str:
-        terms.append(gr.Term(symbol))
+    #for symbol in terms_str:
+    #    terms.append(gr.Term(symbol))
     for element in terms_array:
         terms.append(gr.Term(element))
     return terms
@@ -41,10 +41,16 @@ def set_rules():
     terms_str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789(){}[]+-*/%><=!&|;“‘,_#@$^~№:?"
     rules = []
     # Программа ->
-    rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
-    rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
+    #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
+    #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
     #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление константы"), gr.Term("программа")]))
     rules.append(gr.Rule(gr.Term("программа"), [gr.Term("главная функция")]))
+
+    # главная функция
+    rules.append(
+        gr.Rule(gr.Term("главная функция"),
+                [gr.Term("R3"), gr.Term("ID"), gr.Term("D6"), gr.Term("D7"), gr.Term("D4"),
+                 gr.Term("блок кода"), gr.Term("возврат значения"), gr.Term("D5")]))
 
     # объявление переменной
     rules.append(
@@ -309,11 +315,6 @@ def set_rules():
     rules.append(gr.Rule(gr.Term("присваивание"),
                          [gr.Term("идентификатор"), gr.Term("оператор присваивания"), gr.Term("идентификатор")]))
 
-    # главная функция
-    rules.append(
-        gr.Rule(gr.Term("главная функция"),
-                [gr.Term("R3"), gr.Term("ID"), gr.Term("D6"), gr.Term("D7"), gr.Term("D4"),
-                 gr.Term("блок кода"), gr.Term("возврат значения"), gr.Term("D5")]))
     return rules
 
 

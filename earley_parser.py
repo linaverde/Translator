@@ -2,6 +2,7 @@ import lex
 import grammar as gr
 import earley
 import copy
+import syntax_tree
 
 
 class Parser:
@@ -11,6 +12,7 @@ class Parser:
         self.__lex = lex
         self.__grammar = g
         self.pi = []
+        self.tree: syntax_tree.Elem = syntax_tree.Elem(None)
 
     def parse(self, file):
         lex_list = self.__lex.lex_analysis(file)
@@ -20,9 +22,10 @@ class Parser:
             print(state_list)
             return "Stop parsing"
         for sit in state_list[-1]:
-            if not sit.afterDot:
+            if not sit.afterDot and sit.left.value == self.__grammar.s.value:
                 print(str(self.__grammar.rules_count()))
-                return self.R(state_list, sit, len(state_list) - 1)
+                self.R(state_list, sit, len(state_list)-1)
+                self.print_rules()
 
     def R(self, states, s: earley.Situation, j: int):
         breaked = False
@@ -37,33 +40,47 @@ class Parser:
             return self.pi
         while k != 0:
             breaked = False
-            if self.__grammar.is_terminal(rule.right[k - 1]):
+            rightterm = rule.right[k - 1]
+            print(rightterm.value)
+            if self.__grammar.is_terminal(rightterm):
                 k = k - 1
                 c = c - 1
                 print("k = " + str(k))
                 print("c = " + str(c))
-            elif self.__grammar.is_nonterminal(rule.right[k - 1]):
+            elif self.__grammar.is_nonterminal(rightterm):
                 # находим ситуацию в I[c]
                 Xk = s.beforeDot[k - 1].value
                 A = s.left.value
-                # print(Xk)
                 for st in states[c]:
                     if breaked:
                         break
-                    # print(st.left.value + " ?? " + s.beforeDot[k-1].value)
                     if not st.afterDot and st.left.value == Xk:
                         r = st.get_k()
                         print("r = " + str(r))
-                        # Xk = copy.deepcopy(st.left)
                         # находим ситуацию в I[r]
                         print("-------")
                         for nst in states[r]:
                             if breaked:
                                 break
-                            # print(nst.left.value + " ?? " + s.left.value + " | " + nst.beforeDot[-1].value + " ?? " + Xk.value)
                             if nst.left.value == A and nst.afterDot and nst.afterDot[0].value == Xk:
                                 self.R(states, st, c)
                                 k = k - 1
                                 c = r
                                 breaked = True
         return self.pi
+
+    def print_rules(self):
+        for number in self.pi:
+            self.__grammar.print_rule(number)
+            
+    def grow_tree(self):
+        pass
+        # self.pi.reverse()
+        # first_rule = self.__grammar.get_rule(self.pi.pop)
+        # self.tree = first_rule.left.value
+        # for r in first_rule.right:
+        #     self.tree.add
+        # for number in self.pi:
+        #     rule = self.__grammar.get_rule(number)
+
+

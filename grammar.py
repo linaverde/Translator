@@ -82,3 +82,13 @@ class Grammar:
             if t.value == term.value:
                 return True
         return False
+
+    def print_rule(self, i):
+        rule = self.rules[i]
+        s = str(i) + ": " + rule.left.value + "->"
+        for t in rule.right:
+            s += t.value + " "
+        print (s)
+
+    def get_rule(self, i):
+        return self.rules[i]
