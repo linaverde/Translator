@@ -11,7 +11,8 @@ def set_nonterm():
                      "возврат значения", "блок кода", "цикл", "тело цикла", "ветвление",
                      "символьное значение", "оператор сравнения", "знак типа сложения", "знак типа умножения",
                      "знак унарной операции", "выражение", "лог выражение", "мат выражение", "E1", "T1", "F1", "E2",
-                     "T2", "F2" "логическое значение", "инструкция", "мат знак типа сложения", "мат знак типа умножения",
+                     "T2", "F2" "логическое значение", "инструкция", "мат знак типа сложения",
+                     "мат знак типа умножения",
                      "лог знак типа сложения", "лог знак типа умножения", "лог знак унарной операции",
                      "вызов функции", "параметры вызова функции", "оператор присваивания", "присваивание",
                      "главная функция"]
@@ -30,8 +31,8 @@ def set_term():
                    "O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10",
                    "O11", "O12", "O13", "O14", "O15",
                    "N", "C", "ID"]
-    #for symbol in terms_str:
-    #    terms.append(gr.Term(symbol))
+    for symbol in terms_str:
+        terms.append(gr.Term(symbol))
     for element in terms_array:
         terms.append(gr.Term(element))
     return terms
@@ -41,9 +42,9 @@ def set_rules():
     terms_str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789(){}[]+-*/%><=!&|;“‘,_#@$^~№:?"
     rules = []
     # Программа ->
-    #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
-    #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
-    #rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление константы"), gr.Term("программа")]))
+    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
+    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
+    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление константы"), gr.Term("программа")]))
     rules.append(gr.Rule(gr.Term("программа"), [gr.Term("главная функция")]))
 
     # главная функция
@@ -70,11 +71,11 @@ def set_rules():
     #                                               gr.Term("значение"), gr.Term(";")]))
 
     # значение
-    rules.append(gr.Rule(gr.Term("значение"), [gr.Term("число")]))
-    rules.append(gr.Rule(gr.Term("значение"), [gr.Term("символьное значение")]))
-    rules.append(gr.Rule(gr.Term("значение"), [gr.Term("логическое значение")]))
-    rules.append(gr.Rule(gr.Term("значение"), [gr.Term("идентификатор")]))
-    rules.append(gr.Rule(gr.Term("значение"), [gr.Term("вызов функции")]))
+    # rules.append(gr.Rule(gr.Term("значение"), [gr.Term("число")]))
+    # rules.append(gr.Rule(gr.Term("значение"), [gr.Term("символьное значение")]))
+    # rules.append(gr.Rule(gr.Term("значение"), [gr.Term("логическое значение")]))
+    # rules.append(gr.Rule(gr.Term("значение"), [gr.Term("идентификатор")]))
+    # rules.append(gr.Rule(gr.Term("значение"), [gr.Term("вызов функции")]))
 
     # объявление функции
     rules.append(
@@ -126,7 +127,7 @@ def set_rules():
 
     # вещественное число
     rules.append(
-        gr.Rule(gr.Term("вещественное число"), [gr.Term("целое число"), gr.Term("D1"), gr.Term("целое число")]))
+        gr.Rule(gr.Term("вещественное число"), [gr.Term("N"), gr.Term("D1"), gr.Term("N")]))
 
     # число
     rules.append(gr.Rule(gr.Term("число"), [gr.Term("целое число")]))
@@ -166,16 +167,22 @@ def set_rules():
 
     # цикл
     rules.append(
-        gr.Rule(gr.Term("цикл"), [gr.Term("K9"), gr.Term("("),
-                                  gr.Term("выражение"), gr.Term(")"), gr.Term("D4"), gr.Term("тело цикла"),
+        gr.Rule(gr.Term("цикл"), [gr.Term("K9"), gr.Term("D6"),
+                                  gr.Term("выражение"), gr.Term("D7"), gr.Term("D4"), gr.Term("тело цикла"),
                                   gr.Term("D5")]))
     rules.append(
         gr.Rule(gr.Term("цикл"), [gr.Term("K1"), gr.Term("D4"), gr.Term("тело цикла"), gr.Term("D5"),
                                   gr.Term("K9"), gr.Term("D6"),
                                   gr.Term("выражение"), gr.Term("D7")]))
+
     rules.append(gr.Rule(gr.Term("цикл"),
-                         [gr.Term("K3"), gr.Term("D6"), gr.Term("инструкция"), gr.Term("D3"),
-                          gr.Term("логическое выражение"), gr.Term("D3"), gr.Term("инструкция"), gr.Term("D7"),
+                         [gr.Term("K3"), gr.Term("D6"), gr.Term("инструкция"),
+                          gr.Term("лог выражение"), gr.Term("D3"), gr.Term("присваивание"), gr.Term("D7"),
+                          gr.Term("D4"), gr.Term("тело цикла"), gr.Term("D5")]))
+
+    rules.append(gr.Rule(gr.Term("цикл"),
+                         [gr.Term("K3"), gr.Term("D6"), gr.Term("ID"), gr.Term("D3"),
+                          gr.Term("лог выражение"), gr.Term("D3"), gr.Term("присваивание"), gr.Term("D7"),
                           gr.Term("D4"), gr.Term("тело цикла"), gr.Term("D5")]))
 
     # тело цикла
@@ -243,6 +250,7 @@ def set_rules():
     # F1
     rules.append(gr.Rule(gr.Term("F1"), [gr.Term("("), gr.Term("E1"), gr.Term(")")]))
     rules.append(gr.Rule(gr.Term("F1"), [gr.Term("N")]))
+    rules.append(gr.Rule(gr.Term("F1"), [gr.Term("вещественное число")]))
     rules.append(gr.Rule(gr.Term("F1"), [gr.Term("ID")]))
 
     # логическое значение
@@ -261,26 +269,34 @@ def set_rules():
     rules.append(gr.Rule(gr.Term("лог знак унарной операции"), [gr.Term("O8")]))
 
     # лог выражение
-    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("E2")]))
+    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("мат выражение"), gr.Term("оператор сравнения"),
+                                                    gr.Term("мат выражение")]))
+    rules.append(gr.Rule(gr.Term("лог выражение"),
+                         [gr.Term("символьное значение"), gr.Term("оператор сравнения"),
+                          gr.Term("символьное значение")]))
+    rules.append(gr.Rule(gr.Term("лог выражение"),
+                         [gr.Term("лог значение")]))
 
-    # E2
-    rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2"), gr.Term("лог знак типа сложения"), gr.Term("E2")]))
-    rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2")]))
-    rules.append(gr.Rule(gr.Term("E2"), [gr.Term("лог знак унарной операции"), gr.Term("T2")]))
-
-    # T2
-    rules.append(gr.Rule(gr.Term("T2"), [gr.Term("T2"), gr.Term("лог знак типа умножения"), gr.Term("F2")]))
-    rules.append(gr.Rule(gr.Term("T2"), [gr.Term("F2")]))
-    rules.append(gr.Rule(gr.Term("T2"), [gr.Term("лог знак унарной операции"), gr.Term("F2")]))
-    # разве тут не должно быть наподобие предыдущего, F2 лог знак T2 ?
-
-    # F2
-    rules.append(gr.Rule(gr.Term("F2"), [gr.Term("D6"), gr.Term("E2"), gr.Term("D7")]))
-    rules.append(gr.Rule(gr.Term("F2"), [gr.Term("значение")]))
+    # # E2
+    # rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2"), gr.Term("лог знак типа сложения"), gr.Term("E2")]))
+    # rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2")]))
+    # #rules.append(gr.Rule(gr.Term("E2"), [gr.Term("лог знак унарной операции"), gr.Term("T2")]))
+    #
+    # # T2
+    # rules.append(gr.Rule(gr.Term("T2"), [gr.Term("T2"), gr.Term("лог знак типа умножения"), gr.Term("F2")]))
+    # rules.append(gr.Rule(gr.Term("T2"), [gr.Term("F2")]))
+    # #rules.append(gr.Rule(gr.Term("T2"), [gr.Term("лог знак унарной операции"), gr.Term("F2")]))
+    # # разве тут не должно быть наподобие предыдущего, F2 лог знак T2 ?
+    #
+    # # F2
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("D6"), gr.Term("E2"), gr.Term("D7")]))
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("лог значение")]))
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("мат выражение")]))
 
     # выражение
     rules.append(gr.Rule(gr.Term("выражение"), [gr.Term("лог выражение")]))
     rules.append(gr.Rule(gr.Term("выражение"), [gr.Term("мат выражение")]))
+    rules.append(gr.Rule(gr.Term("выражение"), [gr.Term("символьное значение")]))
 
     # инструкция
     rules.append(gr.Rule(gr.Term("инструкция"), [gr.Term("присваивание"), gr.Term("D3")]))

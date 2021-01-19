@@ -26,6 +26,9 @@ class CppLexAnalyzer:
             i += 1
             for c in line:
                 if c == '&' or c == '|' or c == '<' or c == '>' or c == '!' or c == '=':
+                    if buffer == '':
+                        buffer += c
+                        continue
                     if buffer != '':
                         if buffer == c and (buffer == '&' or buffer == '|' or buffer == '='):
                             buffer += c
@@ -35,6 +38,9 @@ class CppLexAnalyzer:
                             buffer += c
                             result.append([buffer, OPERATOR[buffer], i])
                             buffer = ''
+                        else:
+                            if buffer == '<' or buffer == '>' or buffer == '=':
+                                result.append([buffer, OPERATOR[buffer], i])
                     else:
                         if c == '&' or c == '|':
                             return 'ERROR IN LINE ' + str(i) + ": WRONG LOGIC OPERATOR " + str(c)
@@ -44,6 +50,8 @@ class CppLexAnalyzer:
                     if buffer != '':
                         if str.isdigit(buffer):
                             result.append([buffer, 'N', i])
+                        elif buffer in OPERATOR:
+                            result.append([buffer, OPERATOR[buffer], i])
                         elif str.isalpha(buffer):
                             if buffer in KEYWORD:
                                 result.append([buffer, KEYWORD[buffer], i])

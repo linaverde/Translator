@@ -72,7 +72,7 @@ class Parser:
     def print_rules(self):
         for number in self.pi:
             self.__grammar.print_rule(number)
-            
+
     def grow_tree(self):
         pass
         # self.pi.reverse()
