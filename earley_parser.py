@@ -2,17 +2,19 @@ import lex
 import grammar as gr
 import earley
 import copy
-import syntax_tree
+from anytree import Node, RenderTree
+from syntax_tree import MyNodeClass
 
 
 class Parser:
     __earley = earley.Earley()
 
+    tree = None
+
     def __init__(self, lex: lex.CppLexAnalyzer, g: gr.Grammar):
         self.__lex = lex
         self.__grammar = g
         self.pi = []
-        self.tree: syntax_tree.Elem = syntax_tree.Elem(None)
 
     def parse(self, file):
         lex_list = self.__lex.lex_analysis(file)
@@ -24,8 +26,10 @@ class Parser:
         for sit in state_list[-1]:
             if not sit.afterDot and sit.left.value == self.__grammar.s.value:
                 print(str(self.__grammar.rules_count()))
-                self.R(state_list, sit, len(state_list)-1)
+                self.R(state_list, sit, len(state_list) - 1)
                 self.print_rules()
+                print("_______TREE________")
+                self.grow_tree()
 
     def R(self, states, s: earley.Situation, j: int):
         breaked = False
@@ -74,13 +78,32 @@ class Parser:
             self.__grammar.print_rule(number)
 
     def grow_tree(self):
-        pass
-        # self.pi.reverse()
-        # first_rule = self.__grammar.get_rule(self.pi.pop)
-        # self.tree = first_rule.left.value
-        # for r in first_rule.right:
-        #     self.tree.add
-        # for number in self.pi:
-        #     rule = self.__grammar.get_rule(number)
+        self.pi.reverse()
+        first_rule = self.__grammar.get_rule(self.pi.pop())
+        self.tree = MyNodeClass(first_rule.left, 0, len(self.pi) + 1, 0)
+        new_nodes = []
+        for id, item in enumerate(first_rule.right):
+            new_nodes.append(MyNodeClass(item, 1, len(self.pi), id, self.tree))
+        for item in reversed(new_nodes):
+            self.add_children(item.term, item, item.deep)
+        self.print_tree()
 
+
+
+    def add_children(self, term, parent, depth):
+        if self.__grammar.is_terminal(term):
+            return
+        else:
+            rule = self.__grammar.get_rule(self.pi.pop())
+            new_nodes = []
+            for id, item in enumerate(rule.right):
+                new_nodes.append(MyNodeClass(item, depth+1, len(self.pi), id, parent))
+            for item in reversed(new_nodes):
+                self.add_children(item.term, item, item.deep)
+
+
+    def print_tree(self):
+        for pre, fill, node in RenderTree(self.tree):
+            treestr = u"%s%s" % (pre, node.term.value)
+            print(treestr.ljust(8), node.deep, node.pi_stack_number, node.right_number)
 

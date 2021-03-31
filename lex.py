@@ -32,7 +32,7 @@ class CppLexAnalyzer:
                     if buffer != '':
                         if buffer == c and (buffer == '&' or buffer == '|' or buffer == '='):
                             buffer += c
-                            result.append((buffer, OPERATOR[buffer]))
+                            result.append([buffer, OPERATOR[buffer], i])
                             buffer = ''
                         elif (buffer == '>' or buffer == '<' or buffer == '!') and c == '=':
                             buffer += c

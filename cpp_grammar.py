@@ -42,9 +42,9 @@ def set_rules():
     terms_str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789(){}[]+-*/%><=!&|;“‘,_#@$^~№:?"
     rules = []
     # Программа ->
-    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
-    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
-    # rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление константы"), gr.Term("программа")]))
+    rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление переменной"), gr.Term("программа")]))
+    rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление функции"), gr.Term("программа")]))
+    rules.append(gr.Rule(gr.Term("программа"), [gr.Term("объявление константы"), gr.Term("программа")]))
     rules.append(gr.Rule(gr.Term("программа"), [gr.Term("главная функция")]))
 
     # главная функция
@@ -173,7 +173,7 @@ def set_rules():
     rules.append(
         gr.Rule(gr.Term("цикл"), [gr.Term("K1"), gr.Term("D4"), gr.Term("тело цикла"), gr.Term("D5"),
                                   gr.Term("K9"), gr.Term("D6"),
-                                  gr.Term("выражение"), gr.Term("D7")]))
+                                  gr.Term("выражение"), gr.Term("D7"), gr.Term("D3")]))
 
     rules.append(gr.Rule(gr.Term("цикл"),
                          [gr.Term("K3"), gr.Term("D6"), gr.Term("инструкция"),
