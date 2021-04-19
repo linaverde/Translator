@@ -14,7 +14,7 @@ class Parser:
     def __init__(self, lex: lex.CppLexAnalyzer, g: gr.Grammar):
         self.__lex = lex
         self.__grammar = g
-        self.pi = []
+        self.pi = None
 
     def parse(self, file):
         lex_list = self.__lex.lex_analysis(file)
@@ -23,27 +23,21 @@ class Parser:
         if type(state_list) is str:
             print(state_list)
             return "Stop parsing"
-        for sit in state_list[-1]:
-            if not sit.afterDot and sit.left.value == self.__grammar.s.value:
-                print(str(self.__grammar.rules_count()))
-                self.R(state_list, sit, len(state_list) - 1)
-                self.print_rules()
-                print("_______TREE________")
-                self.grow_tree()
+        print(str(self.__grammar.rules_count()))
+        self.pi = self.start_r(state_list)
+        self.print_rules()
+        print("_______TREE________")
+        self.grow_tree()
 
-    def R(self, states, s: earley.Situation, j: int):
-        breaked = False
+    def R(self, pi, states, s: earley.Situation, j: int):
         rule = gr.Rule(copy.deepcopy(s.left), copy.deepcopy(s.beforeDot))
-        self.pi.append(self.__grammar.find_rule_number(rule))
-        print(self.pi)
+        pi.append(self.__grammar.find_rule_number(rule))
+        # print(pi)
         k = len(s.beforeDot)
         print("k = " + str(k))
         c = j
         print("c = " + str(c))
-        if k == 0:
-            return self.pi
-        while k != 0:
-            breaked = False
+        while k > 0:
             rightterm = rule.right[k - 1]
             print(rightterm.value)
             if self.__grammar.is_terminal(rightterm):
@@ -55,8 +49,10 @@ class Parser:
                 # находим ситуацию в I[c]
                 Xk = s.beforeDot[k - 1].value
                 A = s.left.value
+                searchstate = None
+                searchflag = False
                 for st in states[c]:
-                    if breaked:
+                    if searchflag:
                         break
                     if not st.afterDot and st.left.value == Xk:
                         r = st.get_k()
@@ -64,14 +60,23 @@ class Parser:
                         # находим ситуацию в I[r]
                         print("-------")
                         for nst in states[r]:
-                            if breaked:
+                            if nst.left.value == s.left.value \
+                                    and nst.afterDot and nst.afterDot[0].value == Xk \
+                                    and len(nst.beforeDot) == k-1:
+                                searchstate = st
+                                searchflag = True
                                 break
-                            if nst.left.value == A and nst.afterDot and nst.afterDot[0].value == Xk:
-                                self.R(states, st, c)
-                                k = k - 1
-                                c = r
-                                breaked = True
-        return self.pi
+                self.R(pi, states, searchstate, c)
+                k = k - 1
+                c = r
+        return pi
+
+    def start_r(self, state_list):
+        state = None
+        for sit in state_list[-1]:
+            if not sit.afterDot and sit.left.value == self.__grammar.s.value:
+                state = sit
+        return self.R([], state_list, state, len(state_list) - 1)
 
     def print_rules(self):
         for number in self.pi:
@@ -88,8 +93,6 @@ class Parser:
             self.add_children(item.term, item, item.deep)
         self.print_tree()
 
-
-
     def add_children(self, term, parent, depth):
         if self.__grammar.is_terminal(term):
             return
@@ -97,13 +100,11 @@ class Parser:
             rule = self.__grammar.get_rule(self.pi.pop())
             new_nodes = []
             for id, item in enumerate(rule.right):
-                new_nodes.append(MyNodeClass(item, depth+1, len(self.pi), id, parent))
+                new_nodes.append(MyNodeClass(item, depth + 1, len(self.pi), id, parent))
             for item in reversed(new_nodes):
                 self.add_children(item.term, item, item.deep)
-
 
     def print_tree(self):
         for pre, fill, node in RenderTree(self.tree):
             treestr = u"%s%s" % (pre, node.term.value)
             print(treestr.ljust(8), node.deep, node.pi_stack_number, node.right_number)
-

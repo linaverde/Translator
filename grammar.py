@@ -3,11 +3,18 @@ import sys
 
 class Term:
 
-    def __init__(self, value: str):
+    def __init__(self, value: str, lex=""):
         self.value = value
+        self.lex = lex
 
     def value(self):
         return self.value
+
+    def lex(self):
+        return self.lex
+
+    def setlex(self, lex):
+        self.lex = lex
 
 
 class Rule:
@@ -88,7 +95,7 @@ class Grammar:
         s = str(i) + ": " + rule.left.value + "->"
         for t in rule.right:
             s += t.value + " "
-        print (s)
+        print(s)
 
     def get_rule(self, i):
         return self.rules[i]

@@ -162,7 +162,7 @@ def set_rules():
                          [gr.Term("K10"), gr.Term("имя константы"), gr.Term("D3")]))
 
     # блок кода
-    rules.append(gr.Rule(gr.Term("блок кода"), [gr.Term("инструкция"), gr.Term("блок кода")]))
+    rules.append(gr.Rule(gr.Term("блок кода"), [gr.Term("блок кода"), gr.Term("инструкция")]))
     rules.append(gr.Rule(gr.Term("блок кода"), [gr.Term("инструкция")]))
 
     # цикл
