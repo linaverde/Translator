@@ -3,21 +3,23 @@ import re
 
 # _|\w≈[a-zA-Z]\w+ - регулярка для идентификатора
 
+DATATYPES = {'bool': 'R1', 'char': 'R2', 'int': 'R3', 'float': 'R4', 'double': 'R5',
+             'void': 'R6', 'true': 'R7', 'false': 'R8', }
+
+KEYWORD = {'do': 'K1', 'else': 'K2', 'for': 'K3', 'if': 'K4', 'long': 'K5', 'short': 'K6',
+           'signed': 'K7', 'unsigned': 'K8', 'while': 'K9', 'return': 'K10'}  # "const": "K11"}
+
+DIVIDER = {'.': 'D1', ',': 'D2', ';': 'D3', '{': 'D4', '}': 'D5', '(': 'D6', ')': 'D7'}
+
+OPERATOR = {'+': 'O1', '-': 'O2', '*': 'O3', '/': 'O4', '%': 'O5', '||': 'O6', '&&': 'O7', '!': 'O8',
+            '>': 'O9', '<': 'O10', '>=': 'O11', '<=': 'O12', '==': 'O13', '!=': 'O14', '=': 'O15'}
+
 class CppLexAnalyzer:
 
 
     def lex_analysis(self, source):
 
-        DATATYPES = {'bool': 'R1', 'char': 'R2', 'int': 'R3', 'float': 'R4', 'double': 'R5',
-                     'void': 'R6', 'true': 'R7', 'false': 'R8', }
 
-        KEYWORD = {'do': 'K1', 'else': 'K2', 'for': 'K3', 'if': 'K4', 'long': 'K5', 'short': 'K6',
-                   'signed': 'K7', 'unsigned': 'K8', 'while': 'K9', 'return': 'K10'}  # "const": "K11"}
-
-        DIVIDER = {'.': 'D1', ',': 'D2', ';': 'D3', '{': 'D4', '}': 'D5', '(': 'D6', ')': 'D7'}
-
-        OPERATOR = {'+': 'O1', '-': 'O2', '*': 'O3', '/': 'O4', '%': 'O5', '||': 'O6', '&&': 'O7', '!': 'O8',
-                    '>': 'O9', '<': 'O10', '>=': 'O11', '<=': 'O12', '==': 'O13', '!=': 'O14', '=': 'O15'}
 
         result = []
         buffer = ''

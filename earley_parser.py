@@ -2,14 +2,15 @@ import lex
 import grammar as gr
 import earley
 import copy
-from anytree import Node, RenderTree
+from anytree import RenderTree
 from syntax_tree import MyNodeClass
-
+from semantics import CppSemanticsAnalyzer
 
 class Parser:
     __earley = earley.Earley()
 
     tree = None
+    lex_list = []
 
     def __init__(self, lex: lex.CppLexAnalyzer, g: gr.Grammar):
         self.__lex = lex
@@ -17,9 +18,9 @@ class Parser:
         self.pi = None
 
     def parse(self, file):
-        lex_list = self.__lex.lex_analysis(file)
-        print(lex_list)
-        state_list = self.__earley.start(self.__grammar, lex_list)
+        self.lex_list = self.__lex.lex_analysis(file)
+        print(self.lex_list)
+        state_list = self.__earley.start(self.__grammar, self.lex_list)
         if type(state_list) is str:
             print(state_list)
             return "Stop parsing"
@@ -28,6 +29,9 @@ class Parser:
         self.print_rules()
         print("_______TREE________")
         self.grow_tree()
+        sem = CppSemanticsAnalyzer(self.tree)
+        sem.check_semantic()
+
 
     def R(self, pi, states, s: earley.Situation, j: int):
         rule = gr.Rule(copy.deepcopy(s.left), copy.deepcopy(s.beforeDot))
@@ -62,7 +66,7 @@ class Parser:
                         for nst in states[r]:
                             if nst.left.value == s.left.value \
                                     and nst.afterDot and nst.afterDot[0].value == Xk \
-                                    and len(nst.beforeDot) == k-1:
+                                    and len(nst.beforeDot) == k - 1:
                                 searchstate = st
                                 searchflag = True
                                 break
@@ -84,27 +88,33 @@ class Parser:
 
     def grow_tree(self):
         self.pi.reverse()
+        print(self.lex_list)
         first_rule = self.__grammar.get_rule(self.pi.pop())
-        self.tree = MyNodeClass(first_rule.left, 0, len(self.pi) + 1, 0)
+        self.tree = MyNodeClass(copy.deepcopy(first_rule.left), 0, len(self.pi) + 1, 0)
         new_nodes = []
         for id, item in enumerate(first_rule.right):
-            new_nodes.append(MyNodeClass(item, 1, len(self.pi), id, self.tree))
+            new_nodes.append(MyNodeClass(copy.deepcopy(item), 1, len(self.pi), id, self.tree))
         for item in reversed(new_nodes):
             self.add_children(item.term, item, item.deep)
         self.print_tree()
 
     def add_children(self, term, parent, depth):
         if self.__grammar.is_terminal(term):
+            curr_lex = self.lex_list.pop()
+            term.setlex(curr_lex[0])
             return
         else:
             rule = self.__grammar.get_rule(self.pi.pop())
             new_nodes = []
             for id, item in enumerate(rule.right):
-                new_nodes.append(MyNodeClass(item, depth + 1, len(self.pi), id, parent))
+                new_nodes.append(MyNodeClass(copy.deepcopy(item), depth + 1, len(self.pi), id, parent))
             for item in reversed(new_nodes):
                 self.add_children(item.term, item, item.deep)
 
     def print_tree(self):
         for pre, fill, node in RenderTree(self.tree):
             treestr = u"%s%s" % (pre, node.term.value)
-            print(treestr.ljust(8), node.deep, node.pi_stack_number, node.right_number)
+            if node.term.lex != "":
+                print(treestr.ljust(8), node.term.lex, node.deep, node.pi_stack_number, node.right_number)
+            else:
+                print(treestr.ljust(8), node.deep, node.pi_stack_number, node.right_number)
