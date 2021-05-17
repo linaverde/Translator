@@ -3,8 +3,9 @@ import sys
 
 class Term:
 
-    def __init__(self, value: str, lex=""):
+    def __init__(self, value: str, line=None, lex=None):
         self.value = value
+        self.line = line
         self.lex = lex
 
     def value(self):
@@ -13,8 +14,14 @@ class Term:
     def lex(self):
         return self.lex
 
+    def line(self):
+        return self.line
+
     def setlex(self, lex):
         self.lex = lex
+
+    def setline(self, line):
+        self.line = line
 
 
 class Rule:

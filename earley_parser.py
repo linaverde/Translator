@@ -1,3 +1,5 @@
+import sys
+
 import lex
 import grammar as gr
 import earley
@@ -5,6 +7,7 @@ import copy
 from anytree import RenderTree
 from syntax_tree import MyNodeClass
 from semantics import CppSemanticsAnalyzer
+
 
 class Parser:
     __earley = earley.Earley()
@@ -23,15 +26,27 @@ class Parser:
         state_list = self.__earley.start(self.__grammar, self.lex_list)
         if type(state_list) is str:
             print(state_list)
-            return "Stop parsing"
+            print("Stop parsing")
+            sys.exit()
         print(str(self.__grammar.rules_count()))
         self.pi = self.start_r(state_list)
         self.print_rules()
         print("_______TREE________")
         self.grow_tree()
         sem = CppSemanticsAnalyzer(self.tree)
-        sem.check_semantic()
+        if sem.check_semantic():
+            sys.exit()
+        print("_______OPTIMIZER________")
+        sem.optimizer()
+        self.print_tree()
+        return self.get_new_lex()
 
+    def get_new_lex(self):
+        leaves = self.tree.leaves
+        res = []
+        for l in leaves:
+            res.append([l.term.lex, l.term.value, l.term.line])
+        return res
 
     def R(self, pi, states, s: earley.Situation, j: int):
         rule = gr.Rule(copy.deepcopy(s.left), copy.deepcopy(s.beforeDot))
@@ -102,6 +117,7 @@ class Parser:
         if self.__grammar.is_terminal(term):
             curr_lex = self.lex_list.pop()
             term.setlex(curr_lex[0])
+            term.setline(curr_lex[2])
             return
         else:
             rule = self.__grammar.get_rule(self.pi.pop())

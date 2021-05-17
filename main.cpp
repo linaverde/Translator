@@ -1,7 +1,5 @@
 int main(){
-c = 2;
-int a;
-int b;
-float c = 1;
+int c;
+c = 10 + (10 + 5);
 return 0;
 }

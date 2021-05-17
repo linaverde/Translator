@@ -14,4 +14,3 @@ class MyNodeClass(NodeMixin):  # Add Node feature
             self.children = children
 
 
-
