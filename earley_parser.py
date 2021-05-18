@@ -95,7 +95,11 @@ class Parser:
         for sit in state_list[-1]:
             if not sit.afterDot and sit.left.value == self.__grammar.s.value:
                 state = sit
-        return self.R([], state_list, state, len(state_list) - 1)
+        if state is not None:
+            return self.R([], state_list, state, len(state_list) - 1)
+        else:
+            print("Error in parsing - could not get this program from grammar")
+            sys.exit()
 
     def print_rules(self):
         for number in self.pi:
@@ -130,7 +134,7 @@ class Parser:
     def print_tree(self):
         for pre, fill, node in RenderTree(self.tree):
             treestr = u"%s%s" % (pre, node.term.value)
-            if node.term.lex != "":
+            if node.term.lex is not None:
                 print(treestr.ljust(8), node.term.lex, node.deep, node.pi_stack_number, node.right_number)
             else:
                 print(treestr.ljust(8), node.deep, node.pi_stack_number, node.right_number)

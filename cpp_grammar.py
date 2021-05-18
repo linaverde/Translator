@@ -98,8 +98,8 @@ def set_rules():
     rules.append(gr.Rule(gr.Term("значимый тип данных"), [gr.Term("R5")]))
 
     # модификатор типа данных
-    rules.append(gr.Rule(gr.Term("модификатор типа данных"), [gr.Term("K6")]))
     rules.append(gr.Rule(gr.Term("модификатор типа данных"), [gr.Term("K5")]))
+    rules.append(gr.Rule(gr.Term("модификатор типа данных"), [gr.Term("K6")]))
     rules.append(gr.Rule(gr.Term("модификатор типа данных"), [gr.Term("K7")]))
     rules.append(gr.Rule(gr.Term("модификатор типа данных"), [gr.Term("K8")]))
 
@@ -265,32 +265,41 @@ def set_rules():
     rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("мат выражение"), gr.Term("оператор сравнения"),
                                                     gr.Term("мат выражение")]))
 
+    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("мат выражение"), gr.Term("O7"),
+                                                    gr.Term("мат выражение")]))
+
+    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("мат выражение"), gr.Term("O6"),
+                                                    gr.Term("мат выражение")]))
+
+    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("O8"), gr.Term("мат выражение")]))
+
     rules.append(gr.Rule(gr.Term("лог выражение"),
                          [gr.Term("символьное значение"), gr.Term("оператор сравнения"),
                           gr.Term("символьное значение")]))
 
     rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("лог значение")]))
 
-    rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("E2")]))
+    # rules.append(gr.Rule(gr.Term("лог выражение"), [gr.Term("E2")]))
 
     # логическое значение
     rules.append(gr.Rule(gr.Term("лог значение"), [gr.Term("R7")]))
     rules.append(gr.Rule(gr.Term("лог значение"), [gr.Term("R8")]))
 
-    # E2
-    rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2"), gr.Term("лог знак типа сложения"), gr.Term("E2")]))
-    rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2")]))
-    #rules.append(gr.Rule(gr.Term("E2"), [gr.Term("лог знак унарной операции"), gr.Term("T2")]))
-
-    # T2
-    rules.append(gr.Rule(gr.Term("T2"), [gr.Term("T2"), gr.Term("лог знак типа умножения"), gr.Term("F2")]))
-    rules.append(gr.Rule(gr.Term("T2"), [gr.Term("F2")]))
-    #rules.append(gr.Rule(gr.Term("T2"), [gr.Term("лог знак унарной операции"), gr.Term("F2")]))
-
-    # F2
-    rules.append(gr.Rule(gr.Term("F2"), [gr.Term("D6"), gr.Term("E2"), gr.Term("D7")]))
-    rules.append(gr.Rule(gr.Term("F2"), [gr.Term("лог знак унарной операции"), gr.Term("E2")]))
-    rules.append(gr.Rule(gr.Term("F2"), [gr.Term("выражение")]))
+    # # E2
+    # rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2"), gr.Term("лог знак типа сложения"), gr.Term("E2")]))
+    # rules.append(gr.Rule(gr.Term("E2"), [gr.Term("T2")]))
+    # #rules.append(gr.Rule(gr.Term("E2"), [gr.Term("лог знак унарной операции"), gr.Term("T2")]))
+    #
+    # # T2
+    # rules.append(gr.Rule(gr.Term("T2"), [gr.Term("F2"), gr.Term("лог знак типа умножения"), gr.Term("T2")]))
+    # rules.append(gr.Rule(gr.Term("T2"), [gr.Term("F2")]))
+    # #rules.append(gr.Rule(gr.Term("T2"), [gr.Term("лог знак унарной операции"), gr.Term("F2")]))
+    #
+    # # F2
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("D6"), gr.Term("E2"), gr.Term("D7")]))
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("лог знак унарной операции"), gr.Term("E2")]))
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("ID")]))
+    # rules.append(gr.Rule(gr.Term("F2"), [gr.Term("лог выражение")]))
 
     # выражение
     rules.append(gr.Rule(gr.Term("выражение"), [gr.Term("лог выражение")]))
