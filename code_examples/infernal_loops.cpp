@@ -1,9 +1,4 @@
 int main() {
-
-    int r = 10;
-
-    do {
-        r = r + 1;
     int c = 10;
     int r = 0;
 
@@ -34,4 +29,8 @@ int main() {
             c = c + 20;
         }
         while (c <= 5000);
+    }
+    while (r <= 30);
+
+    return 0;
 }
