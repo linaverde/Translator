@@ -12,9 +12,6 @@ class CppSemanticsAnalyzer:
     def __init__(self, tree):
         self.__tree = tree
 
-    def start(self):
-        pass
-
     def start_find_by_term_value(self, value):
         res = []
         if self.__tree.term.value == value:
@@ -51,11 +48,6 @@ class CppSemanticsAnalyzer:
             print("Переобъявление имени main запрещено")
             return False
 
-        # проверка того, что переменная совпадает с ключевым словом, была раньше
-        # for id in init_id:
-        #     if id in KEYWORD:
-        #         print(id, " - имя переменной не может быть ключевым словом")
-        #         return False
 
         # проверим наличие повторяющихся объявлений
         is_repeatable = len(init_id) != len(set(init_id))
@@ -105,21 +97,7 @@ class CppSemanticsAnalyzer:
                 if used[0] == id and used[1] < rule:
                     print("Переменная", id, "используется в программе до объявления")
                     return False
-
-    def find_max_deep(self, node, curr_deep):
-        if node.deep > curr_deep:
-            curr_deep = node.deep
-        children = node.children
-        for ch in children:
-            curr_deep = self.find_max_deep(ch, curr_deep)
-        return curr_deep
-
-    def find_leaves_with_deep(self, node, deep):
-        res = []
-        for l in node.leaves:
-            if l.deep == deep:
-                res.append(l)
-        return res
+        return True
 
     def optimizer(self):
         # находим все математические выражения, которые надо свернуть
